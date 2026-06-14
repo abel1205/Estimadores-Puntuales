@@ -1,30 +1,744 @@
 ---
 title: "Estimadores Puntuales"
-author: "Abel Cruzado Flores 20241377"
+author: 
+ - Abel Cruzado Flores 20241377
+ - Cardenas Panduro, Ricardo Gabriel 20241376
 date: "2026-06-08"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+## Insesgadez
+
+### Definición
+
+Sea $\hat{\theta}$ un estimador puntual de un parámetro $\theta$. Se dice que $\hat{\theta}$ es un estimador insesgado si su valor esperado coincide con el parámetro que pretende estimar:
+
+$$E(\hat{\theta})=\theta$$
+
+Equivalentemente, el sesgo se define como:
+
+$$\operatorname{Sesgo}(\hat{\theta})
+=
+E(\hat{\theta})-\theta$$
+
+Por consiguiente, un estimador es insesgado cuando:
+
+$$\operatorname{Sesgo}(\hat{\theta})=0$$
+
+### Interpretación
+
+La insesgadez indica que un estimador no tiende a sobreestimar ni subestimar el parámetro poblacional. En promedio, las estimaciones obtenidas a partir de muchas muestras coinciden con el valor real del parámetro.
+
+### Propiedad: Linealidad de la Esperanza
+
+Una propiedad fundamental para demostrar la insesgadez es la linealidad de la esperanza. Si $X_1,X_2,\ldots,X_n$ son variables aleatorias y $a_1,a_2,\ldots,a_n$ son constantes, entonces:
+
+$$E\left(
+\sum_{i=1}^{n} a_i X_i
+\right)
+=
+\sum_{i=1}^{n}
+a_i E(X_i)$$
+
+Esta propiedad permite demostrar que numerosos estimadores utilizados en estadística son insesgados.
+
+### Demostración de la insesgadez de la media muestral
+
+Sea:
+
+$$\bar X
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+X_i$$
+
+la media muestral de una muestra aleatoria simple.
+
+Aplicando la linealidad de la esperanza:
+
+$$E(\bar X)
+=
+E\left(
+\frac{1}{n}
+\sum_{i=1}^{n}
+X_i
+\right)$$
+
+$$=
+\frac{1}{n}
+\sum_{i=1}^{n}
+E(X_i)$$
+
+Como cada observación tiene media poblacional $\mu$:
+
+$$E(X_i)=\mu$$
+
+entonces:
+
+$$E(\bar X)
+=
+\frac{1}{n}
+(n\mu)
+=
+\mu$$
+
+Por lo tanto:
+
+$$E(\bar X)=\mu$$
+
+lo que demuestra que la media muestral es un estimador insesgado de la media poblacional.
+
+### Insesgadez de la varianza muestral y corrección de Bessel
+
+La estimación de la varianza poblacional presenta una dificultad adicional respecto a la estimación de la media. Consideremos el estimador:
+
+$$
+S_n^2
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+$$
+
+A primera vista, este estimador parece una elección natural para estimar la varianza poblacional $(\sigma^2)$. Sin embargo, se demostrará que es un estimador sesgado.
+
+#### Propiedad auxiliar
+
+Se cumple la siguiente identidad:
+
+$$
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+=
+\sum_{i=1}^{n}
+(X_i-\mu)^2
+-
+n(\bar X-\mu)^2
+$$
+
+Tomando esperanza en ambos lados:
+
+$$
+E\left[
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+\right]
+=
+E\left[
+\sum_{i=1}^{n}
+(X_i-\mu)^2
+\right]
+-
+nE[(\bar X-\mu)^2]
+$$
+
+#### Cálculo del primer término
+
+Como:
+
+$$
+Var(X_i)=\sigma^2
+$$
+
+entonces:
+
+$$
+E[(X_i-\mu)^2]
+=
+\sigma^2
+$$
+
+y por linealidad de la esperanza:
+
+$$
+E\left[
+\sum_{i=1}^{n}
+(X_i-\mu)^2
+\right]
+=
+n\sigma^2
+$$
+
+#### Cálculo del segundo término
+
+Recordando que:
+
+$$
+Var(\bar X)
+=
+\frac{\sigma^2}{n}
+$$
+
+se tiene:
+
+$$
+E[(\bar X-\mu)^2]
+=
+\frac{\sigma^2}{n}
+$$
+
+Por consiguiente:
+
+$$
+nE[(\bar X-\mu)^2]
+=
+\sigma^2
+$$
+
+#### Resultado
+
+Sustituyendo ambos resultados:
+
+$$
+E\left[
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+\right]
+=
+n\sigma^2-\sigma^2
+$$
+
+$$
+=
+(n-1)\sigma^2
+$$
+
+Por lo tanto:
+
+$$
+E(S_n^2)
+=
+E\left[
+\frac{1}{n}
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+\right]
+$$
+
+$$
+=
+\frac{1}{n}
+(n-1)\sigma^2
+$$
+
+es decir,
+
+$$
+E(S_n^2)
+=
+\frac{n-1}{n}
+\sigma^2
+$$
+
+Como:
+
+$$
+\frac{n-1}{n}
+\neq
+1
+$$
+
+se concluye que:
+
+$$
+E(S_n^2)
+\neq
+\sigma^2
+$$
+
+y, por tanto, $(S_n^2)$ es un estimador sesgado de la varianza poblacional.
+
+#### Corrección de Bessel
+
+Para eliminar el sesgo se introduce el estimador:
+
+$$
+S^2
+=
+\frac{1}{n-1}
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+$$
+
+Tomando esperanza:
+
+$$
+E(S^2)
+=
+\frac{1}{n-1}
+E\left[
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+\right]
+$$
+
+$$
+=
+\frac{1}{n-1}
+(n-1)\sigma^2
+$$
+
+Por lo tanto:
+
+$$
+E(S^2)
+=
+\sigma^2
+$$
+
+Se concluye que $(S^2)$ es un estimador insesgado de la varianza poblacional. El reemplazo de $(n)$ por $(n-1)$ en el denominador se conoce como **corrección de Bessel** y compensa la pérdida de un grado de libertad ocasionada por la estimación previa de la media poblacional mediante $(\bar X)$.
+
+### Evidencia empírica mediante simulación
+
+Para complementar la demostración teórica, se realizó una simulación con $B=10000$(Número de repeticiones) y muestras aleatorias de tamaño $(n=30)$, generadas a partir de una población con media poblacional $(\mu=50)$ y desviación estándar $(\sigma=10)$.
+
+Para cada muestra se calculó la media muestral, obteniéndose una distribución de estimaciones del parámetro poblacional.
+
+```{r}
+#| echo: true
+
+library(pacman)
+p_load(ggplot2)
+
+set.seed(123)
+
+mu <- 50
+sigma <- 10
+
+n <- 30
+B <- 10000
+
+estimaciones <- replicate(
+  B,
+  mean(rnorm(n, mu, sigma))
+)
 ```
 
-## R Markdown
+El promedio de las estimaciones simuladas fue:
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+$$
+\overline{\hat{\mu}}
+=
+50.01865
+$$
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Dado que el verdadero valor del parámetro es:
 
-```{r cars}
-summary(cars)
+$$
+\mu = 50
+$$
+
+el sesgo empírico se estimó mediante:
+
+$$
+\widehat{\operatorname{Sesgo}}
+=
+\overline{\hat{\mu}}-\mu
+$$
+
+es decir,
+
+$$
+\widehat{\operatorname{Sesgo}}
+=
+50.01865-50
+=
+0.01865
+$$
+
+Este valor es muy próximo a cero, lo que indica que las estimaciones obtenidas se encuentran centradas alrededor del parámetro poblacional.
+
+Debe tenerse en cuenta que el sesgo empírico no es exactamente nulo debido a la variabilidad inherente al proceso de simulación. Sin embargo, al aumentar el número de repeticiones, dicho valor tiende a aproximarse cada vez más a cero.
+
+Por consiguiente, la simulación proporciona evidencia empírica consistente con el resultado teórico:
+
+$$
+E(\bar X)=\mu
+$$
+
+confirmando la propiedad de insesgadez de la media muestral.
+
+### Representación gráfica
+
+```{r}
+#| echo: false
+#| fig-cap: "Distribución muestral de la media."
+
+df_insesgado <- data.frame(
+  estimacion = estimaciones
+)
+
+ggplot(
+  df_insesgado,
+  aes(x = estimacion)
+) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 40,
+    fill = "#2978A0",
+    color = "white",
+    alpha = 0.85
+  ) +
+  geom_vline(
+    xintercept = mu,
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  geom_vline(
+    xintercept = mean(estimaciones),
+    linewidth = 1
+  ) +
+  labs(
+    x = expression(hat(mu)),
+    y = "Densidad"
+  ) +
+  theme_classic(base_size = 13)
 ```
 
-## Including Plots
+La Figura muestra la distribución de las medias muestrales obtenidas mediante simulación. La línea discontinua representa el valor verdadero del parámetro poblacional $(\mu)$, mientras que la línea continua corresponde al promedio de las estimaciones simuladas.
 
-You can also embed plots, for example:
+La proximidad entre ambas líneas proporciona evidencia visual de que la media muestral constituye un estimador insesgado de la media poblacional.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+**Figura 1.** Distribución de las estimaciones obtenidas mediante simulación. La coincidencia entre el parámetro verdadero y el promedio de las estimaciones constituye evidencia de la ausencia de sesgo.
+
+### Relación con el Error Cuadrático Medio
+
+El error cuadrático medio (ECM) se define como:
+
+$$ECM(\hat{\theta})
+=
+E[(\hat{\theta}-\theta)^2]$$
+
+y satisface la identidad:
+
+$$ECM(\hat{\theta})
+=
+Var(\hat{\theta})
++
+Sesgo^2(\hat{\theta})$$
+
+Cuando el estimador es insesgado:
+
+$$ECM(\hat{\theta})
+=
+Var(\hat{\theta})$$
+
+Esta relación muestra que, una vez eliminado el sesgo, la variabilidad del estimador se convierte en el principal criterio para evaluar su calidad.
+
+### Teorema de Rao-Blackwell
+
+Una vez establecida la propiedad de insesgadez, surge el problema de determinar si un estimador insesgado puede mejorarse sin perder dicha propiedad.
+
+El Teorema de Rao-Blackwell proporciona un procedimiento para construir nuevos estimadores insesgados con menor variabilidad a partir de un estimador inicial.
+
+#### Enunciado
+
+Sea $\hat{\theta}$ un estimador insesgado de un parámetro $\theta$ y sea $T(X)$ un estadístico suficiente para dicho parámetro.
+
+Entonces:
+
+$$
+\phi(T)
+=
+E(\hat{\theta}\mid T)
+$$
+
+es también un estimador insesgado de $\theta$ y satisface:
+
+$$
+Var[\phi(T)]
+\le
+Var(\hat{\theta})
+$$
+
+#### Interpretación
+
+El teorema establece que la información contenida en un estadístico suficiente puede utilizarse para construir un nuevo estimador que conserve la propiedad de insesgadez y presente una variabilidad menor o igual que la del estimador original.
+
+Por lo tanto, el estimador obtenido mediante Rao-Blackwell aprovecha de forma más eficiente la información disponible en la muestra.
+
+#### Consecuencias
+
+Como resultado de este teorema se obtiene que:
+
+$$
+E[\phi(T)]
+=
+\theta
+$$
+
+por lo que la propiedad de insesgadez se preserva.
+
+Además,
+
+$$
+Var[\phi(T)]
+\le
+Var(\hat{\theta})
+$$
+
+lo que implica una mejora en la precisión del estimador.
+
+Dado que para estimadores insesgados se cumple:
+
+$$
+ECM(\hat{\theta})
+=
+Var(\hat{\theta})
+$$
+
+también se verifica que:
+
+$$
+ECM[\phi(T)]
+\le
+ECM(\hat{\theta})
+$$
+
+Por consiguiente, el procedimiento de Rao-Blackwell permite obtener estimadores que mantienen la exactitud del estimador original y, simultáneamente, reducen su error de estimación.
+
+#### Comentario
+
+La aplicación formal de este resultado requiere el concepto de estadístico suficiente y el Teorema de Factorización de Neyman-Fisher, los cuales serán desarrollados en capítulos posteriores.
+
+------------------------------------------------------------------------
+
+## Eficiencia
+
+### Definición
+
+La eficiencia permite comparar estimadores insesgados de un mismo parámetro.
+
+Sean $\hat{\theta}_1$ y $\hat{\theta}_2$ dos estimadores insesgados de $\theta$. Se dice que $\hat{\theta}_1$ es más eficiente que $\hat{\theta}_2$ si:
+
+$$Var(\hat{\theta}_1)
+<
+Var(\hat{\theta}_2)$$
+
+### Interpretación
+
+Mientras que la insesgadez evalúa la exactitud promedio de un estimador, la eficiencia evalúa su precisión. Un estimador eficiente produce estimaciones menos dispersas alrededor del parámetro verdadero.
+
+### Justificación mediante el Error Cuadrático Medio
+
+Si ambos estimadores son insesgados:
+
+$$E(\hat{\theta}_1)
+=
+E(\hat{\theta}_2)
+=
+\theta$$
+
+entonces:
+
+$$ECM(\hat{\theta}_1)
+=
+Var(\hat{\theta}_1)$$
+
+y
+
+$$ECM(\hat{\theta}_2)
+=
+Var(\hat{\theta}_2)$$
+
+Por lo tanto, entre dos estimadores insesgados, será preferible aquel que posea menor varianza.
+
+### Evidencia empírica mediante simulación
+
+Para ilustrar la eficiencia se comparan distribuciones muestrales de la media calculadas con diferentes tamaños muestrales.
+
+```{r}
+set.seed(123)
+
+theta <- 50
+sigma <- 10
+
+B <- 5000
+
+media_n10 <- replicate(
+  B,
+  mean(rnorm(10, theta, sigma))
+)
+
+media_n50 <- replicate(
+  B,
+  mean(rnorm(50, theta, sigma))
+)
+
+datos <- data.frame(
+  valor = c(media_n10, media_n50),
+  grupo = factor(
+    rep(c("n = 10", "n = 50"),
+        each = B)
+  )
+)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Según la teoría:
+
+$$Var(\bar X)
+=
+\frac{\sigma^2}{n}$$
+
+Por lo tanto, al aumentar el tamaño muestral la varianza disminuye.
+
+### Comparación mediante densidades
+
+```{r}
+ggplot(
+  datos,
+  aes(
+    x = valor,
+    fill = grupo,
+    color = grupo
+  )
+) +
+  geom_density(
+    alpha = 0.25,
+    linewidth = 1
+  ) +
+  geom_vline(
+    xintercept = theta,
+    linetype = "dashed",
+    linewidth = 1
+  ) +
+  scale_fill_manual(
+    values = c("#2978A0", "#00B295")
+  ) +
+  scale_color_manual(
+    values = c("#2978A0", "#00B295")
+  ) +
+  labs(
+    title = "Comparación de eficiencia",
+    x = expression(hat(theta)),
+    y = "Densidad",
+    fill = "",
+    color = ""
+  ) +
+  theme_classic(base_size = 13)
+```
+
+**Figura 2.** Ambas distribuciones están centradas en el parámetro verdadero, pero la correspondiente a $n=50$ presenta una menor dispersión, indicando una mayor eficiencia.
+
+### Comparación mediante diagramas de caja
+
+```{r}
+ggplot(
+  datos,
+  aes(
+    x = grupo,
+    y = valor,
+    fill = grupo
+  )
+) +
+  geom_boxplot(
+    alpha = 0.85
+  ) +
+  geom_hline(
+    yintercept = theta,
+    linetype = "dashed"
+  ) +
+  scale_fill_manual(
+    values = c("#2978A0", "#00B295")
+  ) +
+  labs(
+    title = "Variabilidad de las estimaciones",
+    x = "",
+    y = expression(hat(theta))
+  ) +
+  theme_classic(base_size = 13) +
+  theme(
+    legend.position = "none"
+  )
+```
+
+**Figura 3.** La distribución asociada a un mayor tamaño muestral presenta menor dispersión, lo que refleja una mayor eficiencia.
+
+### Comparación numérica de varianzas
+
+```{r}
+tabla_varianzas <- data.frame(
+  Estimador = c(
+    "Media muestral (n = 10)",
+    "Media muestral (n = 50)"
+  ),
+  Varianza = c(
+    var(media_n10),
+    var(media_n50)
+  )
+)
+
+knitr::kable(
+  tabla_varianzas,
+  digits = 4,
+  caption = "Comparación de varianzas empíricas"
+)
+```
+
+Los resultados numéricos complementan la evidencia gráfica y permiten verificar la disminución de la varianza al aumentar el tamaño muestral.
+
+### Propiedad de mínima varianza
+
+Dentro de la clase de estimadores insesgados existe especial interés en aquellos que presentan la menor varianza posible.
+
+$$Var(\hat{\theta}^{*})
+\le
+Var(\hat{\theta})$$
+
+para cualquier otro estimador insesgado $\hat{\theta}$.
+
+Esta propiedad motiva la búsqueda de estimadores óptimos en teoría de estimación.
+
+### Relación entre Insesgadez y Eficiencia: Cota de Cramér-Rao
+
+La eficiencia de un estimador insesgado no puede evaluarse únicamente observando su varianza. Es necesario contar con una referencia teórica que permita determinar qué tan cercana se encuentra dicha varianza al mejor valor posible.
+
+La Cota de Cramér-Rao establece que, bajo ciertas condiciones de regularidad, la varianza de cualquier estimador insesgado de un parámetro $\theta$ satisface:
+
+$$Var(\hat{\theta})
+\ge
+\frac{1}{I(\theta)}$$
+
+donde $I(\theta)$ representa la información de Fisher.
+
+Esta desigualdad proporciona una cota inferior para la varianza de los estimadores insesgados. En consecuencia, ningún estimador insesgado puede poseer una varianza menor que dicho límite.
+
+### Interpretación
+
+La información de Fisher mide la cantidad de información que contiene una muestra respecto al parámetro desconocido. Cuanto mayor sea esta información, menor podrá ser la varianza alcanzable por un estimador insesgado.
+
+Por tanto:
+
+$$I(\theta)\uparrow
+\quad\Longrightarrow\quad
+\frac{1}{I(\theta)}\downarrow$$
+
+lo que implica una mayor precisión en la estimación.
+
+### Eficiencia Relativa
+
+La eficiencia de un estimador insesgado puede expresarse como:
+
+$$e(\hat{\theta})
+=
+\frac{\frac{1}{I(\theta)}}
+     {Var(\hat{\theta})}$$
+
+Cuando:
+
+$$e(\hat{\theta})=1$$
+
+el estimador alcanza exactamente la Cota de Cramér-Rao y se considera eficiente en sentido óptimo.
+
+Si:
+
+$$0<e(\hat{\theta})<1$$
+
+el estimador sigue siendo insesgado, pero no aprovecha toda la información disponible en la muestra.
+
+#### Comentario
+
+La Cota de Cramér-Rao constituye el principal criterio teórico para evaluar la eficiencia de estimadores insesgados. Su demostración requiere el estudio de la información de Fisher y será desarrollada en un capítulo posterior.
+
+
+
