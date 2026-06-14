@@ -1,10 +1,25 @@
 ---
-title: "Estimadores Puntuales"
-author: 
- - Abel Cruzado Flores 20241377
- - Cardenas Panduro, Ricardo Gabriel 20241376
-date: "2026-06-08"
-output: pdf_document
+documentclass: report
+fontsize: 11pt
+geometry: margin=2.5cm
+linestretch: 1.15
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    keep_tex: true
+    latex_engine: xelatex
+    includes:
+      before_body: portada.tex
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage{booktabs}
+  - \usepackage{float}
+  - \usepackage{amsmath,amssymb,amsthm}
+  - \usepackage{caption}
+  - \captionsetup{font=small}
+  - \renewcommand{\thesection}{\arabic{section}}
 ---
 
 ## Insesgadez
