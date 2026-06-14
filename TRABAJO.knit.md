@@ -1,0 +1,1002 @@
+---
+documentclass: report
+fontsize: 11pt
+geometry: margin=2.5cm
+linestretch: 1.15
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    keep_tex: true
+    latex_engine: xelatex
+    includes:
+      #before_body: portada.tex
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage{booktabs}
+  - \usepackage{float}
+  - \usepackage{amsmath,amssymb,amsthm}
+  - \usepackage{caption}
+  - \captionsetup{font=small}
+  - \renewcommand{\thesection}{\arabic{section}}
+---
+
+## Insesgadez
+
+### Definición
+
+Sea $\hat{\theta}$ un estimador puntual de un parámetro $\theta$. Se dice que $\hat{\theta}$ es un estimador insesgado si su valor esperado coincide con el parámetro que pretende estimar:
+
+$$E(\hat{\theta})=\theta$$
+
+Equivalentemente, el sesgo se define como:
+
+$$\operatorname{Sesgo}(\hat{\theta})
+=
+E(\hat{\theta})-\theta$$
+
+Por consiguiente, un estimador es insesgado cuando:
+
+$$\operatorname{Sesgo}(\hat{\theta})=0$$
+
+### Interpretación
+
+La insesgadez indica que un estimador no tiende a sobreestimar ni subestimar el parámetro poblacional. En promedio, las estimaciones obtenidas a partir de muchas muestras coinciden con el valor real del parámetro.
+
+### Propiedad: Linealidad de la Esperanza
+
+Una propiedad fundamental para demostrar la insesgadez es la linealidad de la esperanza. Si $X_1,X_2,\ldots,X_n$ son variables aleatorias y $a_1,a_2,\ldots,a_n$ son constantes, entonces:
+
+$$E\left(
+\sum_{i=1}^{n} a_i X_i
+\right)
+=
+\sum_{i=1}^{n}
+a_i E(X_i)$$
+
+Esta propiedad permite demostrar que numerosos estimadores utilizados en estadística son insesgados.
+
+### Demostración de la insesgadez de la media muestral
+
+Sea:
+
+$$\bar X
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+X_i$$
+
+la media muestral de una muestra aleatoria simple.
+
+Aplicando la linealidad de la esperanza:
+
+$$E(\bar X)
+=
+E\left(
+\frac{1}{n}
+\sum_{i=1}^{n}
+X_i
+\right)$$
+
+$$=
+\frac{1}{n}
+\sum_{i=1}^{n}
+E(X_i)$$
+
+Como cada observación tiene media poblacional $\mu$:
+
+$$E(X_i)=\mu$$
+
+entonces:
+
+$$E(\bar X)
+=
+\frac{1}{n}
+(n\mu)
+=
+\mu$$
+
+Por lo tanto:
+
+$$E(\bar X)=\mu$$
+
+lo que demuestra que la media muestral es un estimador insesgado de la media poblacional.
+
+### Insesgadez de la varianza muestral y corrección de Bessel
+
+La estimación de la varianza poblacional presenta una dificultad adicional respecto a la estimación de la media. Consideremos el estimador:
+
+$$S_n^2
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+(X_i-\bar X)^2$$
+
+A primera vista, este estimador parece una elección natural para estimar la varianza poblacional $(\sigma^2)$. Sin embargo, se demostrará que es un estimador sesgado.
+
+#### Propiedad auxiliar
+
+Se cumple la siguiente identidad:
+
+$$\sum_{i=1}^{n}
+(X_i-\bar X)^2
+=
+\sum_{i=1}^{n}
+(X_i-\mu)^2
+-
+n(\bar X-\mu)^2$$
+
+Tomando esperanza en ambos lados:
+
+$$E\left[
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+\right]
+=
+E\left[
+\sum_{i=1}^{n}
+(X_i-\mu)^2
+\right]
+-
+nE[(\bar X-\mu)^2]$$
+
+#### Cálculo del primer término
+
+Como:
+
+$$Var(X_i)=\sigma^2$$
+
+entonces:
+
+$$E[(X_i-\mu)^2]
+=
+\sigma^2$$
+
+y por linealidad de la esperanza:
+
+$$E\left[
+\sum_{i=1}^{n}
+(X_i-\mu)^2
+\right]
+=
+n\sigma^2$$
+
+#### Cálculo del segundo término
+
+Recordando que:
+
+$$Var(\bar X)
+=
+\frac{\sigma^2}{n}$$
+
+se tiene:
+
+$$E[(\bar X-\mu)^2]
+=
+\frac{\sigma^2}{n}$$
+
+Por consiguiente:
+
+$$nE[(\bar X-\mu)^2]
+=
+\sigma^2$$
+
+#### Resultado
+
+Sustituyendo ambos resultados:
+
+$$E\left[
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+\right]
+=
+n\sigma^2-\sigma^2$$
+
+$$=
+(n-1)\sigma^2$$
+
+Por lo tanto:
+
+$$E(S_n^2)
+=
+E\left[
+\frac{1}{n}
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+\right]$$
+
+$$=
+\frac{1}{n}
+(n-1)\sigma^2$$
+
+es decir,
+
+$$E(S_n^2)
+=
+\frac{n-1}{n}
+\sigma^2$$
+
+Como:
+
+$$\frac{n-1}{n}
+\neq
+1$$
+
+se concluye que:
+
+$$E(S_n^2)
+\neq
+\sigma^2$$
+
+y, por tanto, $(S_n^2)$ es un estimador sesgado de la varianza poblacional.
+
+#### Corrección de Bessel
+
+Para eliminar el sesgo se introduce el estimador:
+
+$$S^2
+=
+\frac{1}{n-1}
+\sum_{i=1}^{n}
+(X_i-\bar X)^2$$
+
+Tomando esperanza:
+
+$$E(S^2)
+=
+\frac{1}{n-1}
+E\left[
+\sum_{i=1}^{n}
+(X_i-\bar X)^2
+\right]$$
+
+$$=
+\frac{1}{n-1}
+(n-1)\sigma^2$$
+
+Por lo tanto:
+
+$$E(S^2)
+=
+\sigma^2$$
+
+Se concluye que $(S^2)$ es un estimador insesgado de la varianza poblacional. El reemplazo de $(n)$ por $(n-1)$ en el denominador se conoce como **corrección de Bessel** y compensa la pérdida de un grado de libertad ocasionada por la estimación previa de la media poblacional mediante $(\bar X)$.
+
+### Evidencia empírica mediante simulación
+
+Para complementar la demostración teórica, se realizó una simulación con $B=10000$(Número de repeticiones) y muestras aleatorias de tamaño $(n=30)$, generadas a partir de una población con media poblacional $(\mu=50)$ y desviación estándar $(\sigma=10)$.
+
+Para cada muestra se calculó la media muestral, obteniéndose una distribución de estimaciones del parámetro poblacional.
+
+
+``` r
+library(pacman)
+p_load(ggplot2)
+
+set.seed(123)
+
+mu <- 50
+sigma <- 10
+
+n <- 30
+B <- 10000
+
+estimaciones <- replicate(
+  B,
+  mean(rnorm(n, mu, sigma))
+)
+```
+
+El promedio de las estimaciones simuladas fue:
+
+$$\overline{\hat{\mu}}
+=
+50.01865$$
+
+Dado que el verdadero valor del parámetro es:
+
+$$\mu = 50$$
+
+el sesgo empírico se estimó mediante:
+
+$$\widehat{\operatorname{Sesgo}}
+=
+\overline{\hat{\mu}}-\mu$$
+
+es decir,
+
+$$\widehat{\operatorname{Sesgo}}
+=
+50.01865-50
+=
+0.01865$$
+
+Este valor es muy próximo a cero, lo que indica que las estimaciones obtenidas se encuentran centradas alrededor del parámetro poblacional.
+
+Debe tenerse en cuenta que el sesgo empírico no es exactamente nulo debido a la variabilidad inherente al proceso de simulación. Sin embargo, al aumentar el número de repeticiones, dicho valor tiende a aproximarse cada vez más a cero.
+
+Por consiguiente, la simulación proporciona evidencia empírica consistente con el resultado teórico:
+
+$$E(\bar X)=\mu$$
+
+confirmando la propiedad de insesgadez de la media muestral.
+
+### Representación gráfica
+
+![Distribución muestral de la media.](TRABAJO_files/figure-latex/unnamed-chunk-2-1.pdf) 
+
+La Figura muestra la distribución de las medias muestrales obtenidas mediante simulación. La línea discontinua representa el valor verdadero del parámetro poblacional $(\mu)$, mientras que la línea continua corresponde al promedio de las estimaciones simuladas.
+
+La proximidad entre ambas líneas proporciona evidencia visual de que la media muestral constituye un estimador insesgado de la media poblacional.
+
+**Figura 1.** Distribución de las estimaciones obtenidas mediante simulación. La coincidencia entre el parámetro verdadero y el promedio de las estimaciones constituye evidencia de la ausencia de sesgo.
+
+### Relación con el Error Cuadrático Medio
+
+El error cuadrático medio (ECM) se define como:
+
+$$ECM(\hat{\theta})
+=
+E[(\hat{\theta}-\theta)^2]$$
+
+y satisface la identidad:
+
+$$ECM(\hat{\theta})
+=
+Var(\hat{\theta})
++
+Sesgo^2(\hat{\theta})$$
+
+Cuando el estimador es insesgado:
+
+$$ECM(\hat{\theta})
+=
+Var(\hat{\theta})$$
+
+Esta relación muestra que, una vez eliminado el sesgo, la variabilidad del estimador se convierte en el principal criterio para evaluar su calidad.
+
+### Teorema de Rao-Blackwell
+
+Una vez establecida la propiedad de insesgadez, surge el problema de determinar si un estimador insesgado puede mejorarse sin perder dicha propiedad.
+
+El Teorema de Rao-Blackwell proporciona un procedimiento para construir nuevos estimadores insesgados con menor variabilidad a partir de un estimador inicial.
+
+#### Enunciado
+
+Sea $\hat{\theta}$ un estimador insesgado de un parámetro $\theta$ y sea $T(X)$ un estadístico suficiente para dicho parámetro.
+
+Entonces:
+
+$$\phi(T)
+=
+E(\hat{\theta}\mid T)$$
+
+es también un estimador insesgado de $\theta$ y satisface:
+
+$$Var[\phi(T)]
+\le
+Var(\hat{\theta})$$
+
+#### Interpretación
+
+El teorema establece que la información contenida en un estadístico suficiente puede utilizarse para construir un nuevo estimador que conserve la propiedad de insesgadez y presente una variabilidad menor o igual que la del estimador original.
+
+Por lo tanto, el estimador obtenido mediante Rao-Blackwell aprovecha de forma más eficiente la información disponible en la muestra.
+
+#### Consecuencias
+
+Como resultado de este teorema se obtiene que:
+
+$$E[\phi(T)]
+=
+\theta$$
+
+por lo que la propiedad de insesgadez se preserva.
+
+Además,
+
+$$Var[\phi(T)]
+\le
+Var(\hat{\theta})$$
+
+lo que implica una mejora en la precisión del estimador.
+
+Dado que para estimadores insesgados se cumple:
+
+$$ECM(\hat{\theta})
+=
+Var(\hat{\theta})$$
+
+también se verifica que:
+
+$$ECM[\phi(T)]
+\le
+ECM(\hat{\theta})$$
+
+Por consiguiente, el procedimiento de Rao-Blackwell permite obtener estimadores que mantienen la exactitud del estimador original y, simultáneamente, reducen su error de estimación.
+
+#### Comentario
+
+La aplicación formal de este resultado requiere el concepto de estadístico suficiente y el Teorema de Factorización de Neyman-Fisher, los cuales serán desarrollados en capítulos posteriores.
+
+------------------------------------------------------------------------
+
+## Eficiencia
+
+### Definición
+
+La eficiencia permite comparar estimadores insesgados de un mismo parámetro.
+
+Sean $\hat{\theta}_1$ y $\hat{\theta}_2$ dos estimadores insesgados de $\theta$. Se dice que $\hat{\theta}_1$ es más eficiente que $\hat{\theta}_2$ si:
+
+$$Var(\hat{\theta}_1)
+<
+Var(\hat{\theta}_2)$$
+
+### Interpretación
+
+Mientras que la insesgadez evalúa la exactitud promedio de un estimador, la eficiencia evalúa su precisión. Un estimador eficiente produce estimaciones menos dispersas alrededor del parámetro verdadero.
+
+### Justificación mediante el Error Cuadrático Medio
+
+Si ambos estimadores son insesgados:
+
+$$E(\hat{\theta}_1)
+=
+E(\hat{\theta}_2)
+=
+\theta$$
+
+entonces:
+
+$$ECM(\hat{\theta}_1)
+=
+Var(\hat{\theta}_1)$$
+
+y
+
+$$ECM(\hat{\theta}_2)
+=
+Var(\hat{\theta}_2)$$
+
+Por lo tanto, entre dos estimadores insesgados, será preferible aquel que posea menor varianza.
+
+### Evidencia empírica mediante simulación
+
+Para ilustrar la eficiencia se comparan distribuciones muestrales de la media calculadas con diferentes tamaños muestrales.
+
+
+``` r
+set.seed(123)
+
+theta <- 50
+sigma <- 10
+
+B <- 5000
+
+media_n10 <- replicate(
+  B,
+  mean(rnorm(10, theta, sigma))
+)
+
+media_n50 <- replicate(
+  B,
+  mean(rnorm(50, theta, sigma))
+)
+
+datos <- data.frame(
+  valor = c(media_n10, media_n50),
+  grupo = factor(
+    rep(c("n = 10", "n = 50"),
+        each = B)
+  )
+)
+```
+
+Según la teoría:
+
+$$Var(\bar X)
+=
+\frac{\sigma^2}{n}$$
+
+Por lo tanto, al aumentar el tamaño muestral la varianza disminuye.
+
+### Comparación mediante densidades
+
+
+``` r
+ggplot(
+  datos,
+  aes(
+    x = valor,
+    fill = grupo,
+    color = grupo
+  )
+) +
+  geom_density(
+    alpha = 0.25,
+    linewidth = 1
+  ) +
+  geom_vline(
+    xintercept = theta,
+    linetype = "dashed",
+    linewidth = 1
+  ) +
+  scale_fill_manual(
+    values = c("#2978A0", "#00B295")
+  ) +
+  scale_color_manual(
+    values = c("#2978A0", "#00B295")
+  ) +
+  labs(
+    title = "Comparación de eficiencia",
+    x = expression(hat(theta)),
+    y = "Densidad",
+    fill = "",
+    color = ""
+  ) +
+  theme_classic(base_size = 13)
+```
+
+![](TRABAJO_files/figure-latex/unnamed-chunk-4-1.pdf)<!-- --> 
+
+**Figura 2.** Ambas distribuciones están centradas en el parámetro verdadero, pero la correspondiente a $n=50$ presenta una menor dispersión, indicando una mayor eficiencia.
+
+### Comparación mediante diagramas de caja
+
+
+``` r
+ggplot(
+  datos,
+  aes(
+    x = grupo,
+    y = valor,
+    fill = grupo
+  )
+) +
+  geom_boxplot(
+    alpha = 0.85
+  ) +
+  geom_hline(
+    yintercept = theta,
+    linetype = "dashed"
+  ) +
+  scale_fill_manual(
+    values = c("#2978A0", "#00B295")
+  ) +
+  labs(
+    title = "Variabilidad de las estimaciones",
+    x = "",
+    y = expression(hat(theta))
+  ) +
+  theme_classic(base_size = 13) +
+  theme(
+    legend.position = "none"
+  )
+```
+
+![](TRABAJO_files/figure-latex/unnamed-chunk-5-1.pdf)<!-- --> 
+
+**Figura 3.** La distribución asociada a un mayor tamaño muestral presenta menor dispersión, lo que refleja una mayor eficiencia.
+
+### Comparación numérica de varianzas
+
+
+``` r
+tabla_varianzas <- data.frame(
+  Estimador = c(
+    "Media muestral (n = 10)",
+    "Media muestral (n = 50)"
+  ),
+  Varianza = c(
+    var(media_n10),
+    var(media_n50)
+  )
+)
+
+knitr::kable(
+  tabla_varianzas,
+  digits = 4,
+  caption = "Comparación de varianzas empíricas"
+)
+```
+
+
+
+Table: Comparación de varianzas empíricas
+
+|Estimador               | Varianza|
+|:-----------------------|--------:|
+|Media muestral (n = 10) |   9.8504|
+|Media muestral (n = 50) |   1.9646|
+
+Los resultados numéricos complementan la evidencia gráfica y permiten verificar la disminución de la varianza al aumentar el tamaño muestral.
+
+### Propiedad de mínima varianza
+
+Dentro de la clase de estimadores insesgados existe especial interés en aquellos que presentan la menor varianza posible.
+
+$$Var(\hat{\theta}^{*})
+\le
+Var(\hat{\theta})$$
+
+para cualquier otro estimador insesgado $\hat{\theta}$.
+
+Esta propiedad motiva la búsqueda de estimadores óptimos en teoría de estimación.
+
+### Relación entre Insesgadez y Eficiencia: Cota de Cramér-Rao
+
+La eficiencia de un estimador insesgado no puede evaluarse únicamente observando su varianza. Es necesario contar con una referencia teórica que permita determinar qué tan cercana se encuentra dicha varianza al mejor valor posible.
+
+La Cota de Cramér-Rao establece que, bajo ciertas condiciones de regularidad, la varianza de cualquier estimador insesgado de un parámetro $\theta$ satisface:
+
+$$Var(\hat{\theta})
+\ge
+\frac{1}{I(\theta)}$$
+
+donde $I(\theta)$ representa la información de Fisher.
+
+Esta desigualdad proporciona una cota inferior para la varianza de los estimadores insesgados. En consecuencia, ningún estimador insesgado puede poseer una varianza menor que dicho límite.
+
+### Interpretación
+
+La información de Fisher mide la cantidad de información que contiene una muestra respecto al parámetro desconocido. Cuanto mayor sea esta información, menor podrá ser la varianza alcanzable por un estimador insesgado.
+
+Por tanto:
+
+$$I(\theta)\uparrow
+\quad\Longrightarrow\quad
+\frac{1}{I(\theta)}\downarrow$$
+
+lo que implica una mayor precisión en la estimación.
+
+### Eficiencia Relativa
+
+La eficiencia de un estimador insesgado puede expresarse como:
+
+$$e(\hat{\theta})
+=
+\frac{\frac{1}{I(\theta)}}
+     {Var(\hat{\theta})}$$
+
+Cuando:
+
+$$e(\hat{\theta})=1$$
+
+el estimador alcanza exactamente la Cota de Cramér-Rao y se considera eficiente en sentido óptimo.
+
+Si:
+
+$$0<e(\hat{\theta})<1$$
+
+el estimador sigue siendo insesgado, pero no aprovecha toda la información disponible en la muestra.
+
+#### Comentario
+
+La Cota de Cramér-Rao constituye el principal criterio teórico para evaluar la eficiencia de estimadores insesgados. Su demostración requiere el estudio de la información de Fisher y será desarrollada en un capítulo posterior.
+
+## Suficiencia
+
+Sea $X_1, X_2, \ldots, X_n$ una muestra extraída de una población con función de densidad $f(x;\theta)$, y sea $T = T(X_1, X_2, \ldots, X_n)$ una estadística.
+
+\
+Según Fisher, la estadística $T = T(X_1, X_2, \ldots, X_n)$ es suficiente para efectuar inferencias sobre el parámetro θ cuando T "resume el conjunto de información relevante suministrada por la muestra". Ningún otro estimador definido con la misma muestra puede suministrar información adicional respecto de θ.
+
+\
+Los análisis estadísticos se realizan mediante una reducción o condensación de la información contenida en la muestra. Esta condensación o reducción lleva a cabo la estadística $T = T(X_1, X_2, \ldots, X_n)$ debe producirse sin pérdida de información y en este sentido la suficiencia reclama la propiedad de que la estad´sitica debe tener en relación a la no pérdida de información.
+
+Para poder comprender mejor el alcance del concepto de suficiencia y sus consecuencias, comenzamos estudiando de qué manera una estadística genera una partición del espacio muestral de observación.
+
+$$\mathcal{X}=\{(X_1,\ldots,X_n)\in \mathbb{R}^n \,/\, X_i \text{ es variable aleatoria};\ i=1,2,\ldots,n\}$$
+
+**Ejemplo 1.** Sea $X_1, X_2, X_3$ una muestra aleatoria extraída de una población de Bernoulli $B(1;p)$. Hallar las particiciones inducidas por las estadísticas.
+
+$$T_1=t_1(X_1,X_2,X_3)=\frac{\sum_{i=1}^{3} X_i}{3}
+\qquad \text{y} \qquad
+T_2=t_2(X_1,X_2,X_3)=\max\{X_1,X_2,X_3\}$$
+
+**Solución:** Como $X_i \sim B(1,p)$, entonces tenemos:
+
+$$X_i=
+\begin{cases}
+1, & \text{si ocurre éxito con probabilidad } p,\\
+0, & \text{si ocurre fracaso con probabilidad } 1-p=q,
+\end{cases}
+\qquad \forall i=1,2,3$$
+
+Luego, el espacio muestral de observaciones generado por la muestra aleatoria es:
+
+$$\chi = \{(0;0;0), (0;0;1), (0;1;0), (1;0;0), (0;1;1), (1;0;1), (1;1;0), (1;1;1)\}$$
+
+En la tabla siguiente se muestran los valores que alcanza cada una de las dos estadísticas propuestas.
+
+$$\begin{array}{|c|c|c|}
+\hline
+\text{Muestra} & T_1=t_1(X_1,X_2,X_3) & T_2=t_2(X_1,X_2,X_3) \\
+\hline
+(0,0,0) & 0 & 0 \\
+(0,0,1) & \frac{1}{3} & 1 \\
+(0,1,0) & \frac{1}{3} & 1 \\
+(1,0,0) & \frac{1}{3} & 1 \\
+(0,1,1) & \frac{2}{3} & 1 \\
+(1,0,1) & \frac{2}{3} & 1 \\
+(1,1,0) & \frac{2}{3} & 1 \\
+(1,1,1) & 1 & 1 \\
+\hline
+\end{array}$$
+
+**Tabla1.** Resultados de los estadíticos.
+
+Así, la partición por $T_1=t_1(X_1,X_2,X_3)$ está formada por los siguientes subconjuntos:
+
+$$\begin{matrix}
+\chi_1 = \{(0;0;0)\}, & \chi_2 = \{(0;0;1), (0;1;0), (1;0;0)\} \\
+\chi_3 = \{(0;1;1), (1;0;1), (1;1;0)\}, & \chi_4 = \{(1;1;1)\}
+\end{matrix}$$
+
+Análogamente, la partición inducida por $T_2 = t_2(X_1; X_2; X_3)$ está constituida por los siguientes dos subconjuntos.
+
+$\chi_1 = \{(0;0;0)\}, \quad \chi_2 = \{(0;0;1), (0;1;0), (1;0;0), (0;1;1), (1;0;1), (1;1;0), (1;1;1)\}$
+
+### Definición
+
+Sea $X_1, X_2, \dots, X_n$ una muestra aleatoria extraída de una población con función de densidad $f(x;\theta)$.
+
+Se dice que una estadística $T = t(X_1, X_2, \ldots, X_n)$ es suficiente para θ, si y sólo si la distribución condicional de $X = (X_1, X_2, \ldots, X_n)$ dado $T = t(X_1, X_2, \ldots, X_n)$ es independiente de θ, $\forall \theta$, esto es:
+
+$P[\underline{X} = \u nderline{x} / T = t]$ no depende de θ.
+
+La idea es que si uno conoce el valor de la estadística suficiente $T = t(X_1, X_2, \ldots, X_n)$ , entonces los valores muestrales así solos no son necesarios para tomar deciciones acerca de θ; y esto es verdaero, pues la distribución muestra dado el valor de la estadística suficiente $T=t$ no depende de θ. Uno no puede esperar para enterarse de algo acerca de θ mediante los valores muestrales si su distribución no depende de θ.
+
+**Teorema 3.- (Criterio de Factorización Fisher-Neyman)**
+
+Sea $X_1, \dots, X_n$ una muestra aleatoria extraída de una población con función de densidad $f(x; \theta)$. La estadística $T = t(X_1, \dots, X_n)$ es suficiente para $\theta$, si y sólo si, existen funciones $g_\theta$ y $h$ tal que la densidad conjunta de $X_1, \dots, X_n$ se puede factorizar como
+
+$$f(x_1, \dots, x_n; \theta) = g_\theta(t(x_1, \dots, x_n)) h(x_1, \dots, x_n) = g_\theta(T) h(x_1, \dots, x_n)$$
+
+donde la función $h(x_1, \dots, x_n)$ es no negativa y no depende del parámetro $\theta$, y la función $g_\theta(t(x_1, \dots, x_n))$ es no negativa y depende del parámetro $\theta$ y de la muestra, solamente a través de la estadística $T = t(x_1, \dots, x_n)$.
+
+**Teorema 4.- (Criterio de Factorización)**
+
+Sea $X_1, \dots, X_n$ una muestra aleatoria extraída de una población con función de densidad de probabilidad $f(x; \theta)$, donde $\underline{\theta} = (\theta_1, \dots, \theta_k) \in \Theta \subset \mathbb{R}^k$. Una estadística m-dimensional
+
+$$T = t(X_1, \dots, X_n) = (t_1(X_1, \dots, X_n), \dots, t_m(X_1, \dots, X_n)) = (T_1; T_2; \dots; T_m)$$
+
+es suficiente para $\underline{\theta}$, si y sólo si, la densidad conjunta de $X_1, \dots, X_n$ se factoriza como sigue
+
+$$\begin{aligned}
+f(x_1, \dots, x_n; \underline{\theta}) &= g_{\underline{\theta}}(t(x_1, \dots, x_n)) h(x_1, \dots, x_n) \\
+&= g_{\underline{\theta}}((t_1(x_1, \dots, x_n), \dots, t_m(x_1, \dots, x_n))) h(x_1, \dots, x_n)
+\end{aligned}$$
+
+donde $g_{\underline{\theta}}$ es una función no negativa y depende de $x_1, \dots, x_n$ sólo a través de $T$ y $h$ es una función independiente de $\theta$.
+
+**Ejemplo 2.-** Sea $X_1, \dots, X_n$ una muestra aleatoria extraída de una población $N(\mu; 1)$. Hallar una estadística suficiente para $\mu$.
+
+**Solución:** La función de densidad de probabilidad de la distribución $N(\mu; 1)$ es dado por:
+
+$$f(x; \mu) = \frac{1}{\sqrt{2\pi}} e^{-1/2(x-\mu)^2} = (2\pi)^{-1/2} \exp\left\{ -\frac{1}{2}(x^2 - 2\mu x + \mu^2) \right\}$$
+
+Luego la densidad conjunta de la m.a. $X_1, \dots, X_n$ es
+
+$$\begin{aligned}
+f(\underline{x}; \mu) &= \prod_{i=1}^n f(x_i; \mu) = \prod_{i=1}^n (2\pi)^{-1/2} \exp\left\{ -\frac{1}{2}x_i^2 + \mu x_i - \frac{1}{2}\mu^2 \right\} \\
+&= (2\pi)^{-n/2} \exp\left\{ -\frac{1}{2}\sum x_i^2 + \mu \sum x_i - \frac{n\mu^2}{2} \right\} \\
+&= (2\pi)^{-n/2} \exp\left\{ \mu \sum_{i=1}^n x_i - \frac{n\mu^2}{2} \right\} \cdot \exp\left\{ -\frac{1}{2}\sum_{i=1}^n x_i^2 \right\}
+\end{aligned}$$
+
+$$= (2\pi)^{-n/2} \exp\left\{ \mu T - \frac{n\mu^2}{2} \right\} \cdot \exp\left\{ -\frac{1}{2}\sum_{i=1}^n x_i^2 \right\} = g_\mu(T)h(\underline{x})$$
+
+donde $h(\underline{x}) = \exp\left\{ -\frac{1}{2}\sum x_i^2 \right\} \quad ; \quad g_\mu(T) = \frac{1}{(2\pi)^{n/2}} \exp\left\{ \mu T - \frac{n}{2}\mu^2 \right\}$
+
+Por tanto, $T = t(\underline{X}) = \sum_{i=1}^n X_i$ es una estadística suficiente para $\mu$.
+
+### Implementación en R
+
+Para ilustrar el resultado obtenido, se genera una muestra aleatoria de una distribución Normal $N(\mu,1)$ y se calcula la estadística suficiente
+
+$$T=\sum_{i=1}^{n}X_i.$$
+
+
+``` r
+# Fijar semilla
+set.seed(123)
+
+# Parámetros
+mu <- 5
+n <- 20
+
+# Generar muestra aleatoria N(mu,1)
+x <- rnorm(n, mean = mu, sd = 1)
+
+# Estadística suficiente
+T <- sum(x)
+
+# Mostrar muestra
+x
+```
+
+```
+##  [1] 4.439524 4.769823 6.558708 5.070508 5.129288 6.715065 5.460916 3.734939
+##  [9] 4.313147 4.554338 6.224082 5.359814 5.400771 5.110683 4.444159 6.786913
+## [17] 5.497850 3.033383 5.701356 4.527209
+```
+
+``` r
+# Mostrar estadística suficiente
+T
+```
+
+```
+## [1] 102.8325
+```
+
+La estadística suficiente obtenida es:
+
+$$T=\sum_{i=1}^{n}X_i.$$
+
+De acuerdo con el Teorema de Factorización de Fisher-Neyman, toda la información contenida en la muestra respecto al parámetro $\mu$ queda resumida en esta estadística.
+
+```         
+```
+
+
+``` r
+library(ggplot2)
+
+datos <- data.frame(x = x)
+
+ggplot(datos, aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 8,
+                 fill = "skyblue",
+                 color = "black",
+                 alpha = 0.8) +
+  geom_density(linewidth = 1.2, color = "red") +
+  geom_vline(xintercept = mu,
+             color = "darkgreen",
+             linewidth = 1.2,
+             linetype = "dashed") +
+  labs(
+    title = "Muestra aleatoria de una distribución N(5,1)",
+    subtitle = paste("Estadística suficiente T =", round(T,2)),
+    x = "Valores observados",
+    y = "Densidad"
+  ) +
+  theme_classic(base_size = 13)
+```
+
+![](TRABAJO_files/figure-latex/unnamed-chunk-8-1.pdf)<!-- --> 
+
+**Figura4.** Distribución generada a partir de una población $N(5,1)$
+
+La figura muestra la distribución de la muestra generada a partir de una población $N(5,1)$. La línea vertical punteada representa la media poblacional $u=5$ . Para esta muestra, la estadística suficiente para $u$ es $T=\sum_{i=1}^{n} X_i$, cuyo valor observado es $T$.
+
+**Ejemplo 3.-** Sea $X_1, \dots, X_n$ una m.a. extraída de una población $N(\mu; \sigma^2)$ y sea $\underline{\theta} = (\mu; \sigma^2)$ el vector de parámetros. Hallar una estadística suficiente para $\underline{\theta}$.
+
+**Solución:** La función conjunta de la muestra es:
+
+$$\begin{aligned}
+f(\underline{x}; \underline{\theta}) &= \prod_{i=1}^n f(x_i; \underline{\theta}) = \prod_{i=1}^n (2\pi)^{-1/2} \cdot \sigma^{-1} \cdot \exp\left\{ -\frac{1}{2\sigma^2}(x_i - \mu)^2 \right\} \\
+&= (2\pi)^{-n/2} \cdot \sigma^{-n} \cdot \exp\left\{ -\frac{1}{2\sigma^2} \sum_{i=1}^n (x_i - \mu)^2 \right\} \\
+&= \frac{1}{(2\pi)^{n/2} \cdot \sigma^n} \cdot \exp\left\{ -\frac{1}{2\sigma^2} \sum_{i=1}^n x_i^2 + \frac{\mu}{\sigma^2} \sum_{i=1}^n x_i - \frac{n\mu^2}{2\sigma^2} \right\} \\
+&= \frac{1}{(2\pi)^{n/2} \cdot \sigma^n} \cdot \exp\left\{ -\frac{1}{2\sigma^2} T_2 + \frac{\mu}{\sigma^2} T_1 - \frac{n\mu^2}{2\sigma^2} \right\} = g_{\underline{\theta}}(T_1; T_2) h(\underline{x})
+\end{aligned}$$
+
+donde $h(\underline{x}) = 1 \quad ; \quad g_{\underline{\theta}}(T_1; T_2) = \frac{1}{(2\pi)^{n/2} \cdot \sigma^n} \cdot \exp\left\{ -\frac{1}{2\sigma^2} T_2 + \frac{\mu}{\sigma^2} T_1 - \frac{n\mu^2}{2\sigma^2} \right\}$
+
+Por tanto, $T = t(\underline{X}) = \left( \sum_{i=1}^n X_i ; \sum_{i=1}^n X_i^2 \right)$ es una estadística suficiente para $\underline{\theta} = (\mu; \sigma^2)$
+
+Ejemplo3: Estadística suficiente para una población Normal
+
+Sea $X_1,\ldots,X_n$ una muestra aleatoria de una población
+
+$$N(\mu,\sigma^2)$$
+
+Aplicando el Teorema de Factorización de Fisher-Neyman se obtiene que
+
+$$T(\mathbf{X})=
+\left(
+\sum_{i=1}^{n}X_i,
+\sum_{i=1}^{n}X_i^2
+\right)$$
+
+es una estadística suficiente para el vector de parámetros
+
+$$\boldsymbol{\theta}=(\mu,\sigma^2).$$
+
+### Verificación mediante simulación en R
+
+
+``` r
+# Fijamos semilla para reproducibilidad
+set.seed(123)
+
+# Parámetros poblacionales
+mu <- 10
+sigma <- 2
+n <- 20
+
+# Generación de la muestra
+x <- rnorm(n, mean = mu, sd = sigma)
+
+# Estadísticas suficientes
+T1 <- sum(x)
+T2 <- sum(x^2)
+
+# Resultados
+T1
+```
+
+```
+## [1] 205.665
+```
+
+``` r
+T2
+```
+
+```
+## [1] 2186.806
+```
+
+La salida proporciona los valores observados de
+
+$$T_1=\sum_{i=1}^{n}X_i$$
+
+y
+
+$$T_2=\sum_{i=1}^{n}X_i^2,$$
+
+que constituyen una estadística suficiente para $(\mu,\sigma^2)$.
+
+
+``` r
+library(ggplot2)
+
+datos <- data.frame(
+  i = 1:n,
+  x = x
+)
+
+# Cálculo de estadísticos suficientes
+T1 <- sum(x)
+T2 <- sum(x^2)
+
+ggplot(datos, aes(x = i, y = x)) +
+  geom_point(size = 2, color = "steelblue") +
+  geom_line(color = "gray60", alpha = 0.6) +
+  labs(
+    title = "Muestra aleatoria de N(μ, σ²)",
+    subtitle = paste0("T1 = ΣXi = ", round(T1,2),
+                      "   |   T2 = ΣXi² = ", round(T2,2)),
+    x = "Índice i",
+    y = "Valores de la muestra"
+  ) +
+  theme_classic(base_size = 13)
+```
+
+![](TRABAJO_files/figure-latex/unnamed-chunk-10-1.pdf)<!-- --> 
+
+Figura5.
+
+EL gráfico muestra la muestra aleatoria generada de una población $N(\mu,\sigma^2)$. Toda la información relevante sobre los parámetros $(\mu,\sigma^2)$ queda resumida en las estadísticas suficientes$T_1 = \sum X_i \text{ y } T_2 = \sum X_i^2$, lo que confirma el resultado obtenido mediante el teorema de factorización de Neyman-Fisher.
+
+## Conclusiones
+
+La muestra aleatoria proveniente de una población normal $N(\mu,\sigma^2)$ puede ser completamente resumida mediante la estadística bidimensional $(T_1,T_2)=\left(\sum X_i,\sum X_i^2\right)$ , la cual es suficiente para el vector de parámetros $(\mu,\sigma^2)$. Esto implica que no se pierde información relevante sobre los parámetros al reemplazar la muestra completa por estas estadísticas.
+
+La existencia de una estadística suficiente para $(\mu,\sigma^2)$ confirmar que la distribución normal pertenece a la familia exponencial, lo que permite reducir la dimensionalidad de los datos sin afectar la inferencia estadística. En particular, toda la información contenida en la muestra sobre los parámetros se concentra en $T_1 \text{ y } T_2$, facilitando el cálculo de estimadores eficientes.
+
+## Bibliografía
+
+- Mitacc Meza, M. *Tópicos de inferencia estadística* (3.ª ed.). Lima, Perú.
+
+<!-- -->
+
+- Moya, R. y Saravia, G. *Probabilidad e inferencia estadística*. Perú.
+
+<!-- -->
+
+- Huamani Flores, S. *Apuntes de clase del curso: Análisis estadístico*. Material de curso, Perú.
