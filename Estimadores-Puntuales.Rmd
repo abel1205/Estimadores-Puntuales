@@ -22,6 +22,22 @@ header-includes:
   - \renewcommand{\thesection}{\arabic{section}}
 ---
 
+## Introducción
+
+En el contexto de la inferencia estadística, los estimadores puntuales son una herramienta fundamental la cual permite extrapolar infomación sobre una población a partir de una muestra. Su principal objetivo es poporcionar un único valor numérico que represente la mejor aproximación posible a un parámetro poblacional desconocido.\
+Es necesario hacer una diferencia entre estimador y estimación, un estimador es una función de una muestra, mientras que una estimación es el valor obtenido al aplicar un estimador a los datos de una muestra. Es decir, un estimador es una función de las variables aleatorias mientras que una estimación es una función de los valores muestrales.(López de Castilla Vásquez, 2012).\
+Sin embargo, no todos los estimadores ofrecen las mismas aproximaciones. Para poder evaluar y seleccionar el mejor estimador, se desarrollan las siguientes propiedades que permiten caracterizar su comportamiento:
+
+-   Insesgadez: Un estimador insesgado es aquel cuando, en promedio, su valor coincice con el parámetro poblacional al cual se pretende estimar. Es lo que garantiza que el estimador no tenga una tendencia a sobreestimar o subestimar.   
+
+-   Eficiencia: De los estimadores insesgados, aquellos con menor varianza son considerados los más eficientes. Esta propiedad mide la precisión del estimador, es decir, que tan cercanas son sus estimaciones al rededor del valor real.   
+
+-   Consistencia: Un estimador es llamado consistente cuando, al aumentar el tamaño de su muestra, la probabilidad de que su valor se aproxime al parámetro de la población tiende a uno. Esto asegura que el estimador mejora a medida que se aumenta la muestra o dispone de más información.   
+
+-   Suficiencia: Es suficiente cuando el estimador condensa la información relevante que se tiene sobre el parámetro que contiene la muestra. Esta propiedad permite reducir la dimensionalidad de los datos sin perder información.   
+
+Es por ello que en el presente trabajo, se desarrollarán y explorarán las propiedades mencionadas mediante su definición teórica, verificación y simulación utilizando el lenguaje R, para así poder comprender mejor su importancia en la selección de estimadores óptimos.   
+
 ## Insesgadez
 
 ### Definición
@@ -693,6 +709,181 @@ el estimador sigue siendo insesgado, pero no aprovecha toda la información disp
 
 La Cota de Cramér-Rao constituye el principal criterio teórico para evaluar la eficiencia de estimadores insesgados. Su demostración requiere el estudio de la información de Fisher y será desarrollada en un capítulo posterior.
 
+## Consistencia
+
+### Definición
+
+Si $\widehat{\Theta}_{n} = G(X_{1}, X_{2}, X_{3},..., X_{n})$ es una secuencia de estimadores del parámetro $\Theta$ basado en una muestra aleatoria de tamaño $n$, se dice que $\widehat{\Theta}$ es consistente para $\Theta$, si:   
+$\lim_{n \to \infty} P[|\hat{\theta}_n - \theta| < \epsilon] = 1$
+
+Esta propiedad garantiza que, a medida que el tamaño muestral aumenta, el estimador se aproxima más al valor del parámetro poblacional. Es decir, que si pudiéramos tomar muestras cada vez más grandes, podríamos saber el parámetro con cualquier precicisón. Esta es considerada una propidad mínima deseable en cualquier estimador, si este no lo tuviera, no sería útil en la práctica, puesto que incluso con una muestra muy amplia, no se garantizaría una aproximación adecuada al parámetro poblacional.   
+
+### Teoremas
+
+#### La Base de la Consistencia
+
+Un estimador será consistente si al aumentar el tamaño de muestra, ocurren dos escenarios:   
+
+- Su sesgo tiende a desparecer.   
+- Su varianza tiende a cero.   
+
+Teniendo así que si estas dos condiciones se cumplen, el estimador *converge* al valor real.   
+
+El error cuadrático medio (ECM) de un estimador se descompone como ECM = Varianza + $Sesgo^2$.   
+Si ambos términos se vuelven cero, el estimador colapsa sobre el parámetro real.   
+
+- Condición del sesgo:   
+$\lim_{n \to \infty} \text{Sesgo}_\theta[W_n] = 0$
+
+- Condición de la Varianza:   
+$\lim_{n \to \infty} \text{Var}_\theta[W_n] = 0$
+
+#### Ajuste Lineal
+
+Teniendo un estimador consistente $W_n$. se puede realizar un pequeño *ajuste lineal* multiplicándolo por un número $a_n$ y sumarle otro número $b_n$.   
+Este teorema indica que, mientras esos números de ajuste tiendan a 1 y 0 respectivamente, el estimador será consistente $U_n = a_n W_n + b_n$. Esta propiedad tiene una gran utilidad, puesto que si se tiene un estimador como la desviación estándar ($S$), se quiere estimar la varianza ($S^2$), aplicando el teorema, justifica que elevar al cuadrado al estimador, el resultado sigue siendo consistente.   
+
+Estabilización de las constantes:   
+
+$\lim_{n \to \infty} a_n = 1$
+
+$\lim_{n \to \infty} b_n = 0$
+
+El nuevo estimador transformado:   
+
+$U_n = a_n W_n + b_n$
+
+#### Estimadores Máximo Verosímiles (MLE)
+
+Los estimadores de máxima verosimilitud que maximizan la función de verosimilitud $L(\theta|x)$ son siempre consistentes.   
+
+Esto significa que, usando MLE para estimar $\theta$, con una muestra suficientemente grande, se acercará el valor sin importar el modelo. Siendo además para cualquier función continua de ese parámetro.   
+
+Función de Verosimilitud:   
+
+$L(\theta|x) = \prod_{i=1}^n f(x_i|\theta)$
+
+Condición de consistencia para cualquier $\epsilon > 0$:   
+
+$\lim_{n \to \infty} \Pr_{\theta} \left( \left| \tau(\hat{\theta}) - \tau(\theta) \right| \geq \epsilon \right) = 0$
+
+
+### Demostración para la Media Muestral
+
+Para poder demostrar que la media muestral es un estimador consistente de la media poblacional, es posible utilizar la ***Desigualdad de Chebyshev*** o la ***Ley Débil de los Grandes Números***.   
+
+Verificando la consistencia de la media muestral $\overline{X_{n}}$ mediante la desigualdad de Chebysev:   
+
+***Primer Paso***: Planteamiento de la Desigualdad de Chebyshev   
+
+$P[|\bar{X}_n - \mu| < k\sigma_{\bar{X}}] \geq 1 - \frac{1}{k^2}$
+
+Esta es la forma bilateral de la desigualdad, la cual se deriva de la definición de varianza:   
+
+$P(|Y - E[Y]| \geq k\sigma_Y) \leq \frac{1}{k^2} \Rightarrow P(|Y - E[Y]| < k\sigma_Y) \geq 1 - \frac{1}{k^2}.$
+
+***Segundo Paso***: Definición de $\epsilon$ y despejando k   
+
+Se toma:   
+
+$\varepsilon = k\sigma_{\bar{X}} \Rightarrow k = \frac{\varepsilon}{\sigma_{\bar{X}}}.$
+
+Ya que $\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}}$ (esto es válido para muestras independientes y que se encuentren idénticamente distribuidas), entonces:   
+
+$k = \frac{\varepsilon}{\sigma/\sqrt{n}} = \frac{\varepsilon\sqrt{n}}{\sigma}.$
+
+***Tercer Paso***:   
+
+Sustituyendo $k$ en $1 - \frac{1}{k^2}$ :   
+
+$1 - \frac{1}{k^2} = 1 - \frac{1}{\left(\frac{\varepsilon\sqrt{n}}{\sigma}\right)^2} = 1 - \frac{\sigma^2}{n\varepsilon^2}.$
+
+Por lo tanto:   
+
+$P[|\bar{X}_n - \mu| < \varepsilon] \geq 1 - \frac{\sigma^2}{n\varepsilon^2}.$
+
+***Cuarto Paso***: Toma del límite cuando $n \to \infty$   
+
+$\lim_{n\to\infty} \left(1 - \frac{\sigma^2}{n\varepsilon^2}\right) = 1.$
+
+Ya que $P[|\bar{X}_n - \mu| < \varepsilon]$ se encuentra acotada inferiormente por una cantidad la cual tiende a 1, siendo la máxima probabilidad 1, nos queda:   
+
+$\lim_{n\to\infty} P[|\bar{X}_n - \mu| < \varepsilon] = 1.$
+
+
+
+
+### Verificación mediante R
+
+```{r}
+
+library(pacman)
+p_load(ggplot2, dplyr, tidyr)
+
+mu <- 50
+sigma <- 10
+tamanos <- c(5, 10, 20, 50, 100, 500, 1000, 5000)
+B <- 1000
+simular_medias <- function(n, B, mu, sigma) {
+  replicate(B, mean(rnorm(n, mu, sigma)))
+}
+
+resultados <- lapply(tamanos, function(n) {
+  medias <- simular_medias(n, B, mu, sigma)
+  data.frame(tamano = factor(n, levels = tamanos), media = medias)
+})
+datos_consistencia <- bind_rows(resultados)
+
+resumen_consistencia <- datos_consistencia %>%
+  group_by(tamano) %>%
+  summarise(
+    media_estimada = mean(media),
+    varianza_estimada = var(media),
+    sesgo = mean(media) - mu,
+    error_cuadratico = var(media) + sesgo^2,
+    .groups = "drop"
+  )
+
+knitr::kable(resumen_consistencia, digits = 4, caption = "Comportamiento de la media muestral al aumentar el tamaño muestral")
+```
+
+```{r}
+
+ggplot(datos_consistencia, aes(x = media, fill = tamano, color = tamano)) +
+  geom_density(alpha = 0.3, linewidth = 0.8) +
+  geom_vline(
+    xintercept = mu,
+    linetype = "dashed",
+    color = "red",
+    linewidth = 1.2
+  ) +
+  labs(
+    title = "Consistencia de la media muestral",
+    subtitle = paste(
+      "La distribución se concentra alrededor de μ =",
+      mu,
+      "a medida que n aumenta"
+    ),
+    x = expression(bar(X)),
+    y = "Densidad",
+    fill = "Tamaño muestral (n)",
+    color = "Tamaño muestral (n)",
+  ) +
+  theme_classic(base_size = 13) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  facet_wrap( ~ tamano, scales = "free_y", ncol = 3)
+```
+
+
+
+En cada simulación se verifica que la media muestral es un estimador consistente de la media poblacional. A medida que el tamaño de la muestra aumenta:   
+- La varianza de las estimaciones va disminuyendo.   
+- El sesgo tiende a ser cero.   
+- La distribución de las estimaciones se vuelve cada vez más concentrada al rededor del valor real.   
+Notar que la propiedad de consistencia es una propiedad asintótica, esto significa que si el tamaño muestral tiende al infinito es cuando se alcanzaría la media muestral al valor exacto correcto. En la realidad esto significa que para una muestra suficientemente grande, el estimador puede proporcionar una aproximación precisa al parámetro poblacional.   
+
+
 ## Suficiencia
 
 Sea $X_1, X_2, \ldots, X_n$ una muestra extraída de una población con función de densidad $f(x;\theta)$, y sea $T = T(X_1, X_2, \ldots, X_n)$ una estadística.
@@ -971,18 +1162,63 @@ EL gráfico muestra la muestra aleatoria generada de una población $N(\mu,\sigm
 
 ## Conclusiones
 
+***Insesgadez***
+
+Esta propiedad fue verifica tanto teórica como aplicativa para la media muestral. La demostración téorica demostró que:   
+
+$E(\bar{X}) = \mu$
+
+confirmando que la media muestral no presente algú nseso en la estimación de la media poblacional.   
+
+Para el caso de la varianza, se evidenció que el estimador natural $S_n^2 = \frac{1}{n} \sum_{i=1}^{n}(X_i - \bar{X})^2$  es sesgado:
+
+$E(S_n^2) = \frac{n-1}{n}\sigma^2$
+
+justificando así la correción de Bessel:   
+
+$S^2 = \frac{1}{n-1} \sum_{i=1}^{n}(X_i - \bar{X})^2$
+
+Además, la simulación realizada con $10 000$ repeticiones y $n = 30$ mostró un sesgo casi nulo, confirmando el resultado teórico.   
+
+***Eficiencia***
+
+En la comparación de eficiencie entre estimadores con diferentes tamaños muestrales pudo demostrar claramente que la media muestra con $n = 50$ es más eficiente que con $n = 10$, presentando una varianza mucho menor:   
+
+$Var(\bar{X}_{10}) = 9.8504 \quad \text{y} \quad Var(\bar{X}_{50}) = 1.9646$
+
+La eficiencia como tal es una propiedad crucial, pues permite elegir entre estimadores insesgados para un mismo nivel de exactitud, eligiendo el que ofrezca mayor precisión.   
+
+***Consistencia***
+
+Se pudo ver en la simulación realizada demostrar que la media muestral es un estimador consistente de la media poblacional. Los resultados mostraron que:   
+
+Para $n = 5$, la varianza era de aproximadamente 21.35.   
+Para $n = 5000$, la varianza se pudo reducir hasta aproximadamente 0.02.
+
+Es esta disminución de la varianza con el tamaño muestral que muestra la propiedad de consistencia. Un añadido el cual fue el sesgo el cual tiende a cero a medida que $n$ aumenta relacionando así la probabilidad del estimador al parámetro poblacional.   
+
+***Suficiencia***
+
 La muestra aleatoria proveniente de una población normal $N(\mu,\sigma^2)$ puede ser completamente resumida mediante la estadística bidimensional $(T_1,T_2)=\left(\sum X_i,\sum X_i^2\right)$ , la cual es suficiente para el vector de parámetros $(\mu,\sigma^2)$. Esto implica que no se pierde información relevante sobre los parámetros al reemplazar la muestra completa por estas estadísticas.
 
 La existencia de una estadística suficiente para $(\mu,\sigma^2)$ confirmar que la distribución normal pertenece a la familia exponencial, lo que permite reducir la dimensionalidad de los datos sin afectar la inferencia estadística. En particular, toda la información contenida en la muestra sobre los parámetros se concentra en $T_1 \text{ y } T_2$, facilitando el cálculo de estimadores eficientes.
 
+En conclusión, es de vital importancia destacar que cada una de las propiedades no son independientes, sino que estas se complemente e incluso a veces entran en conflicto dado que un estimador puede ser ***sesgado*** pero eficiente, ofreciendo un menor error cuadrático medio que otro estimador insesgado. Así también, un estimador puede ser insesgado pero inconsistente si es que su varianza no tiende a cero.   
+Es así que la comprensión de estas propiedades es fundamental para cualquier persona que realice cualquier tipo de análisis estadístico, puesto que proporciona la teoría necesaria para poder seleccionar y evaluar distintos estimadores de manera más rigurosa y fundamentada.   
+
+
 ## Bibliografía
 
-- Mitacc Meza, M. *Tópicos de inferencia estadística* (3.ª ed.). Lima, Perú.
+-   Mitacc Meza, M. *Tópicos de inferencia estadística* (3.ª ed.). Lima, Perú.
 
 <!-- -->
 
-- Moya, R. y Saravia, G. *Probabilidad e inferencia estadística*. Perú.
+-   Moya, R. y Saravia, G. *Probabilidad e inferencia estadística*. Perú.
 
 <!-- -->
 
-- Huamani Flores, S. *Apuntes de clase del curso: Análisis estadístico*. Material de curso, Perú.
+-   Huamani Flores, S. *Apuntes de clase del curso: Análisis estadístico*. Material de curso, Perú.
+
+<!-- -->
+
+-   López de Castilla Vásquez, C. (2012). *Inferencia Estadística - [Guía de curso]*. Universidad Nacional Agraria La Molina.
